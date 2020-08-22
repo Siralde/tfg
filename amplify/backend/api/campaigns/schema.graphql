@@ -1,0 +1,14 @@
+type RoundDetails @model {
+  id: ID!
+  companyName: String!
+  email: String!
+  url: String!
+  direction: String!
+  youtube: String!
+  companyDescription: String!
+  membersNumber: Int!
+  membersNames: [String]!
+  membersLinkedin: [String]!
+  bussinesModel: String
+  roundPurpose: String
+}

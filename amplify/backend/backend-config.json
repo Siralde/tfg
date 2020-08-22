@@ -1,0 +1,20 @@
+{
+	"api": {
+		"campaigns": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"authConfig": {
+					"defaultAuthentication": {
+						"authenticationType": "API_KEY",
+						"apiKeyConfig": {
+							"apiKeyExpirationDays": 4,
+							"description": "Data of the Investing Campaign"
+						}
+					},
+					"additionalAuthenticationProviders": []
+				}
+			}
+		}
+	}
+}
