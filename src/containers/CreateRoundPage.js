@@ -1,356 +1,193 @@
 import React, { Component } from 'react';
-import {questions} from '../components/questions';
-import { Grid, Form, Button, Icon, Message } from 'semantic-ui-react';
-import { API, graphqlOperation } from 'aws-amplify'
-import { createRoundDetails as CreateRoundDetails } from '../graphql/mutations'
+import web3 from '../ethereum/web3.js';
+import CampaignFactory from '../ethereum/campaignFactory';
+import { DateTimePicker } from 'react-widgets';
+import { 
+  Header, 
+  Icon, 
+  Input, 
+  Label, 
+  Button, 
+  Form,
+  Message, Container
+} from 'semantic-ui-react';
 
+class InvestPage extends Component {
 
-class CreateRoundPage extends Component {
-
-  constructor(props){
-    super(props);
-
-    this.state = {
-        question : questions[0],
-        questionNumber: 0,
-        finishQuestion: false,
-        answer: '',
-        answers: [],
-        team: [],
-        linkedins: []
-    };
-
-    this.nextQuestion = this.nextQuestion.bind(this);
-    this.previousQuestion = this.previousQuestion.bind(this);
-    this.handleName = this.handleName.bind(this);
-  }  
-
-  nextQuestion()
-  {
-      let nextQuestion = this.state.questionNumber;
-      nextQuestion++;
-      let currentAnswer = this.state.answer;
-      let currentQuestion = this.state.questionNumber;
-      let newAnswers = this.state.answers;
-      newAnswers[currentQuestion] = currentAnswer;
-      
-      //If we haven't respond to the question yet, the textarea is shown empty
-      if(newAnswers[nextQuestion] === undefined || newAnswers[nextQuestion] === '')
-      {
-        this.setState({ 
-          question: questions[nextQuestion],
-          questionNumber: nextQuestion, 
-          finishQuestion: false,
-          answers: newAnswers,
-          answer: ''
-        });        
-      }
-      else // is shown whatever is was written before
-      {
-        this.setState({ 
-          question: questions[nextQuestion],
-          questionNumber: nextQuestion, 
-          finishQuestion: false,
-          answers: newAnswers,
-          answer: newAnswers[nextQuestion]
-        });
-      }
-      if(nextQuestion === 7)
-      {
-        this.initializeTeamsAndLinkedis(this.state.answers[6])
-      }
+  state = {
+    etherToCollect: 0,
+    tokenName: '' ,
+    tokenSymbol: '',
+    tokenSupply: '',
+    tokenValue: 0,
+    campaignOpeningTime: new Date(),
+    campaignClosingTime: new Date()
   }
 
-  previousQuestion()
-  {
-    let preQuestion = this.state.questionNumber;
-    preQuestion--;
-    let previousAnswer = this.state.answers[preQuestion];
-    if(preQuestion > -1)
-    {
-      this.setState({ 
-        questionNumber: preQuestion, 
-        question: questions[preQuestion],
-        answer: previousAnswer,
-        finishQuestion: false
-      });
-    }
-
-    if(preQuestion === 7)
-    {
-      this.checkIfLinkedinsAreReady(this.state.team);
-    }
-    else if(preQuestion === 8)
-    {
-      this.checkIfLinkedinsAreReady(this.state.linkedins);
-    }
-
+  onChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    })
   }
 
-  uploadNewCompany = async() => {
-    const {answers, team, linkedins} = this.state; 
+  openingTimeHandler = (event) => {
+    console.log(event.target.name);
+    // this.setState({ campaignOpeningTime: event });
+  }
 
-    const newRound = {
-      companyName: answers[0],
-      email: answers[1],
-      url: answers[2],
-      direction: answers[3],
-      companyDescription: answers[4],
-      youtube: answers[5],
-      membersNumber: parseInt(answers[6]),
-      membersNames: team,
-      membersLinkedin: linkedins,
-      bussinesModel: 'Alde',
-      roundPurpose: 'Round'
-    }
+  closignTimeHandler = (event) => {
+    console.log(event.target.value);
+    // this.setState({ campaignClosingTime: event });
+  }
+
+  converDateToSeconds(date)
+  {
+    let seconds = parseInt(new Date(date).getTime()/1000);
+    return seconds;
+  }
+
+  onSubmit = async event => {
+    event.preventDefault();
+
+    // const campaign = Campaign(this.props.address);
+    const { etherToCollect, tokenName, tokenSymbol, tokenSupply, tokenValue, campaignOpeningTime, campaignClosingTime } = this.state;
+
+
+    this.setState({ loading: true, errorMessage: '' });
 
     try 
     {
-      await API.graphql(graphqlOperation(CreateRoundDetails, { input: newRound }))
-      console.log('item created!')
-    } catch (err) {
-      console.log('error creating talk...', err)
-    }
-  }
+      const accounts = await window.ethereum.request(
+        { method: 'eth_requestAccounts' }
+      );
+      const campaignFactory = CampaignFactory(
+        '0x55Cb7280531F02E398F603BbCc9430734b4B88dA', 
+        web3
+      );
 
-  changeAnswer = (formData) => {
-    this.setState({answer: formData.target.value})
-  }
-
-  fileChange = (event) => {
-    let newAnswers = this.state.answers;
-    newAnswers[this.state.questionNumber] = event.target.files[0];
-    this.setState({ answers: newAnswers, answer: event.target.files[0]});
-  }
-
-  initializeTeamsAndLinkedis = (teamNumber) => {
-    let newTeam = [];
-    for(let i = 0; i < teamNumber; i++)
+      await campaignFactory.methods.createCampaign(
+        tokenSupply,
+        tokenName,
+        tokenSymbol,
+        campaignOpeningTime,
+        campaignClosingTime,
+        web3.utils.toWei(etherToCollect, 'ether')
+      );
+    } 
+    catch (err) 
     {
-      newTeam.push('');
+      this.setState({ errorMessage: err.message });
     }
-    this.setState({team: newTeam, linkedins: newTeam});
-  }
 
-  handleName(index, event) {
-    let newTeam = this.state.team.slice();
-    newTeam[index] = event.target.value;
-    this.setState({ team: newTeam });
-    this.checkIfLinkedinsAreReady(newTeam);
-  }
-
-  handleLinkedin = (index, event) => {
-    let newLinkedin = this.state.linkedins.slice();
-    newLinkedin[index] = event.target.value;
-    this.setState({ linkedins: newLinkedin });
-    this.checkIfLinkedinsAreReady(newLinkedin);
-  }
-
-  checkIfLinkedinsAreReady(ar) 
-  {
-    let linkedinFull = true;
-    
-    ar.forEach(element => {
-      
-      if(element === '' || element === undefined)
-      {
-        linkedinFull = false;
-      }
-      else
-      {
-        linkedinFull = true;
-      }
-    });
-
-    if(linkedinFull)
-    {
-      this.setState({ answer: 'Teams is Full' });
-    }
-    else{
-      this.setState({ answer: '' });
-    }
-  }
-
-  renderSwitch = (param) => {
-    switch(param) {
-      case 3:
-      case 4:
-        return (
-          <Form.TextArea 
-            value={this.state.answer}
-            onChange={(e) => {this.setState({answer: e.target.value})}}
-          />
-        );
-      case 6:
-        return (
-          <Form.Input 
-            value={this.state.answer}
-            onChange={(e) => {this.setState({answer: e.target.value})}}
-            fluid  
-            type='number'
-          />
-        );
-      case 7:
-        let items = [];
-        items = this.state.team.map((teamMember, index) => {
-          let lbl = 'Integrante ' + (index + 1);
-          return (
-            <Form.Input
-              key={index} 
-              value={this.state.team[index]}
-              onChange={this.handleName.bind(this, index)}
-              label={lbl} 
-            />
-          )}
-        );
-        return items;
-      case 8:
-        let links = [];
-        links = this.state.team.map((teamMember, index) => {
-          let lbl = 'Integrante' + (index + 1);
-          let lbl2 = 'Introduce el URL del Linkedin';
-          return (
-            <Form.Group key={'group' + index} widths='2'>
-              <Form.Input
-                key={'integrantes' + index} 
-                value={this.state.team[index]}
-                label={lbl} 
-                disabled
-              />
-              <Form.Input
-                key={'linkedins' + index} 
-                value={this.state.linkedins[index]}
-                onChange={this.handleLinkedin.bind(this, index)}
-                label={lbl2}
-              />
-            </Form.Group>
-          )}
-        );
-        return links;
-      case 9:
-      case 10:
-        return (
-          <Form.Field>
-            <Button 
-              as="label" 
-              htmlFor="file" 
-              type="button"
-            >
-              <Icon name='pdf file outline' />
-            </Button>
-            <input 
-              type="file" 
-              id="file" 
-              hidden 
-              onChange={this.fileChange} 
-            />
-          </Form.Field>
-        );                
-      default:
-        return (
-          <Form.Input 
-            value={this.state.answer}
-            onChange={(e) => {this.setState({answer: e.target.value})}}
-            fluid  
-          />
-        );
-    }
+    this.setState({ loading: false });
   }
 
   render() {
     return (
-      <Grid>
-        <Grid.Row>
-          <Grid.Column textAlign="center">
-            <h1>Crea tu ronda de Financiacion</h1>
-          </Grid.Column>
-        </Grid.Row>
-
-        <Grid.Row columns='12'>
-          <Grid.Column textAlign="center" width='11'>
-            <h2>{this.state.question}</h2>
-          </Grid.Column>
-          <Grid.Column textAlign="center" width='1'>
-            <h2>{this.state.questionNumber}/{questions.length}</h2>
-          </Grid.Column>
-        </Grid.Row>
-
-        <Grid.Row>
-          <Grid.Column textAlign="center">
-            <Form>
-              {this.renderSwitch(this.state.questionNumber)}
-            </Form>
-          </Grid.Column>
-        </Grid.Row>
-
-        <Grid.Row>
-          <Grid.Column textAlign="center">
-            <Button 
-              color='red'
-              onClick={this.previousQuestion}
-              icon 
-              labelPosition='left'
-            >
-              <Icon 
-                name='left arrow' 
-              />
-              Atras
-            </Button>
+        <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
           
-            {
-              this.state.questionNumber === (questions.length - 1)
-              ?<Button 
-                  color='blue'
-                  onClick={this.uploadNewCompany}
-                  icon 
-                  labelPosition='right'
-                  basic 
-                  
-                >
-                  Terminar
-                  <Icon name='checkmark' />
-                </Button>
-              :(this.state.answer === '' ?
-                  <Button 
-                    color='green'
-                    onClick={this.nextQuestion}
-                    icon 
-                    labelPosition='right'
-                    disabled
-                  >
-                    Siguiente
-                    <Icon name='right arrow' />
-                  </Button>
-                :
-                  <Button 
-                    color='green'
-                    onClick={this.nextQuestion}
-                    icon 
-                    labelPosition='right'
-                  >
-                    Siguiente
-                    <Icon name='right arrow' />
-                  </Button>
-                )
-              }
-          </Grid.Column>
-        </Grid.Row>
+          <Header as='h2' icon textAlign='center'>
+            <Icon name='cny' circular />
+            <Header.Content>Creacion de la Campaña</Header.Content>
+          </Header>
 
-        <Grid.Row>
-          <Grid.Column>
-            <Message>
-              <Message.Header>
-                Politica y Privacidad
-              </Message.Header>
-              <p>
-                Todos los datos serán tratados de forma anónima
-              </p>
-            </Message>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+          <Form.Field>
+            <Input labelPosition='right' type='text' placeholder='Amount'>
+              <Label basic>¿Cuánto ETH se desea recaudar? </Label>
+                <input
+                  name='etherToCollect'
+                  onChange={this.onChange}
+                  value={this.state.etherToCollect}
+                  placeholder=''
+                  type="number"
+                />
+              <Label><Icon name='ethereum'/></Label>
+            </Input>
+          </Form.Field>
+
+          <Form.Field>
+            <Input labelPosition='right' type='text' placeholder='Amount'>
+              <Label basic>¿Qué nombre deseas darle a tu TOKEN? </Label>
+                <input
+                  name='tokenName'
+                  onChange={this.onChange}
+                  value={this.state.tokenName}
+                  placeholder=''
+                />
+              <Label><Icon name='cny'/></Label>
+            </Input>
+          </Form.Field>
+
+          <Form.Field>
+            <Input labelPosition='right' type='text' placeholder='Amount'>
+              <Label basic>Indica el simbolo de  </Label>
+                <input
+                  name='tokenSymbol'
+                  onChange={this.onChange}
+                  value={this.state.tokenSymbol}
+                  placeholder=''
+                />
+              <Label><Icon name='cny'/></Label>
+            </Input>
+          </Form.Field>
+
+          <Form.Field>
+            <Input labelPosition='right' type='text' placeholder='Amount'>
+              <Label basic>Indica la cantidad de TOKEN que deseas generar</Label>
+                <input
+                  name='tokenValue'
+                  onChange={this.onChange}
+                  value={this.state.tokenValue}
+                  placeholder=''
+                  type="number"
+                />
+              <Label></Label>
+            </Input>
+          </Form.Field>
+
+          <Form.Field>
+            <Input labelPosition='right' type='text' placeholder='Amount'>
+              <Label basic>1 ETH equivale</Label>
+                <input
+                  name='tokenValue'
+                  onChange={this.onChange}
+                  value={(this.state.etherToCollect/this.state.tokenValue).toString()}
+                  placeholder=''
+                  type="number"
+                />
+              <Label>TOKEN</Label>
+            </Input>
+          </Form.Field>
+
+          <Form.Group widths='equal'>
+            <Form.Field>
+              <Label basic>Fecha de Inicio</Label>
+              <input 
+                value={this.state.campaignOpeningTime}
+                type="datetime" 
+                name="campaignOpeningTime"
+                onChange={this.onChange}
+              />
+            </Form.Field>
+            <Form.Field >
+              <Label basic>Fecha de Cierre</Label> 
+              <input 
+                value={this.state.campaignClosingTime}
+                type="datetime" 
+                name="campaignClosingTime"
+                onChange={this.onChange}
+              />
+            </Form.Field>
+          </Form.Group>
+
+
+          <Message error header="Oops!" content={this.state.errorMessage} />
+          <Button color='green' loading={this.state.loading}>
+            Create Campaing!
+          </Button>
+        </Form>
     )
   }
 }
-  
-export default CreateRoundPage;
+
+export default InvestPage;

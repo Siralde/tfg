@@ -20,7 +20,7 @@ export default () => (
 
        
         <Menu.Item>
-            <Link to={`/createRound`}>
+            <Link to={`/createCampaign`}>
                 <h3>
                     Crear Ronda
                 </h3>
