@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import web3 from '../ethereum/web3.js';
 import CampaignFactory from '../ethereum/campaignFactory';
-import { DateTimePicker } from 'react-widgets';
+import DateTimePicker from 'react-datetime-picker';
+
 import { 
   Header, 
   Icon, 
@@ -30,14 +31,12 @@ class InvestPage extends Component {
     })
   }
 
-  openingTimeHandler = (event) => {
-    console.log(event.target.name);
-    // this.setState({ campaignOpeningTime: event });
+  openingTimeHandler = (openingTime) => {
+    this.setState({ campaignOpeningTime: openingTime });
   }
 
-  closignTimeHandler = (event) => {
-    console.log(event.target.value);
-    // this.setState({ campaignClosingTime: event });
+  closingTimeHandler = (closingTime) => {
+    this.setState({ campaignClosingTime: closingTime });
   }
 
   converDateToSeconds(date)
@@ -51,6 +50,7 @@ class InvestPage extends Component {
 
     // const campaign = Campaign(this.props.address);
     const { etherToCollect, tokenName, tokenSymbol, tokenSupply, tokenValue, campaignOpeningTime, campaignClosingTime } = this.state;
+
 
 
     this.setState({ loading: true, errorMessage: '' });
@@ -84,108 +84,110 @@ class InvestPage extends Component {
 
   render() {
     return (
-        <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
-          
-          <Header as='h2' icon textAlign='center'>
-            <Icon name='cny' circular />
-            <Header.Content>Creacion de la Campaña</Header.Content>
-          </Header>
+      <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
+        
+        <Header as='h2' icon textAlign='center'>
+          <Icon name='cny' circular />
+          <Header.Content>Creacion de la Campaña</Header.Content>
+        </Header>
 
-          <Form.Field>
-            <Input labelPosition='right' type='text' placeholder='Amount'>
-              <Label basic>¿Cuánto ETH se desea recaudar? </Label>
-                <input
-                  name='etherToCollect'
-                  onChange={this.onChange}
-                  value={this.state.etherToCollect}
-                  placeholder=''
-                  type="number"
-                />
-              <Label><Icon name='ethereum'/></Label>
-            </Input>
-          </Form.Field>
-
-          <Form.Field>
-            <Input labelPosition='right' type='text' placeholder='Amount'>
-              <Label basic>¿Qué nombre deseas darle a tu TOKEN? </Label>
-                <input
-                  name='tokenName'
-                  onChange={this.onChange}
-                  value={this.state.tokenName}
-                  placeholder=''
-                />
-              <Label><Icon name='cny'/></Label>
-            </Input>
-          </Form.Field>
-
-          <Form.Field>
-            <Input labelPosition='right' type='text' placeholder='Amount'>
-              <Label basic>Indica el simbolo de  </Label>
-                <input
-                  name='tokenSymbol'
-                  onChange={this.onChange}
-                  value={this.state.tokenSymbol}
-                  placeholder=''
-                />
-              <Label><Icon name='cny'/></Label>
-            </Input>
-          </Form.Field>
-
-          <Form.Field>
-            <Input labelPosition='right' type='text' placeholder='Amount'>
-              <Label basic>Indica la cantidad de TOKEN que deseas generar</Label>
-                <input
-                  name='tokenValue'
-                  onChange={this.onChange}
-                  value={this.state.tokenValue}
-                  placeholder=''
-                  type="number"
-                />
-              <Label></Label>
-            </Input>
-          </Form.Field>
-
-          <Form.Field>
-            <Input labelPosition='right' type='text' placeholder='Amount'>
-              <Label basic>1 ETH equivale</Label>
-                <input
-                  name='tokenValue'
-                  onChange={this.onChange}
-                  value={(this.state.etherToCollect/this.state.tokenValue).toString()}
-                  placeholder=''
-                  type="number"
-                />
-              <Label>TOKEN</Label>
-            </Input>
-          </Form.Field>
-
-          <Form.Group widths='equal'>
-            <Form.Field>
-              <Label basic>Fecha de Inicio</Label>
-              <input 
-                value={this.state.campaignOpeningTime}
-                type="datetime" 
-                name="campaignOpeningTime"
+        <Form.Field>
+          <Input labelPosition='right' type='text' placeholder='Amount'>
+            <Label basic>¿Cuánto ETH se desea recaudar? </Label>
+              <input
+                name='etherToCollect'
                 onChange={this.onChange}
+                value={this.state.etherToCollect}
+                placeholder=''
+                type="number"
               />
-            </Form.Field>
-            <Form.Field >
-              <Label basic>Fecha de Cierre</Label> 
-              <input 
-                value={this.state.campaignClosingTime}
-                type="datetime" 
-                name="campaignClosingTime"
+            <Label><Icon name='ethereum'/></Label>
+          </Input>
+        </Form.Field>
+
+        <Form.Field>
+          <Input labelPosition='right' type='text' placeholder='Amount'>
+            <Label basic>¿Qué nombre deseas darle a tu TOKEN? </Label>
+              <input
+                name='tokenName'
                 onChange={this.onChange}
+                value={this.state.tokenName}
+                placeholder=''
+                type="text"
               />
-            </Form.Field>
-          </Form.Group>
+            <Label><Icon name='cny'/></Label>
+          </Input>
+        </Form.Field>
+
+        <Form.Field>
+          <Input labelPosition='right' type='text' placeholder='Amount'>
+            <Label basic>Indica el simbolo de  </Label>
+              <input
+                name='tokenSymbol'
+                onChange={this.onChange}
+                value={this.state.tokenSymbol}
+                placeholder=''
+                type='text'
+              />
+            <Label><Icon name='cny'/></Label>
+          </Input>
+        </Form.Field>
+
+        <Form.Field>
+          <Input labelPosition='right' type='text' placeholder='Amount'>
+            <Label basic>Indica la cantidad de TOKEN que deseas generar</Label>
+              <input
+                name='tokenValue'
+                onChange={this.onChange}
+                value={this.state.tokenValue}
+                placeholder=''
+                type="number"
+              />
+            <Label></Label>
+          </Input>
+        </Form.Field>
+
+        <Form.Field>
+          <Input labelPosition='right' type='text' placeholder='Amount'>
+            <Label basic>1 ETH equivale</Label>
+              <input
+                name='tokenValue'
+                onChange={this.onChange}
+                value={(this.state.etherToCollect/this.state.tokenValue).toString()}
+                placeholder=''
+                type="number"
+              />
+            <Label>TOKEN</Label>
+          </Input>
+        </Form.Field>
+
+        <Form.Group widths='equal'>
+          <Form.Field>
+            <Label basic>Fecha de Inicio</Label>
+            <DateTimePicker
+              minDate={new Date()}
+              name="campaignOpeningTime"
+              onChange={this.openingTimeHandler}
+              value={this.state.campaignOpeningTime}
+            />
+          </Form.Field>
+          <Form.Field >
+            <Label basic>Fecha de Cierre</Label> 
+            <DatePicker
+              minDate={new Date()}
+              name="campaignClosingTime"
+              onChange={this.closingTimeHandler}
+              value={this.state.campaignClosingTime}
+            />
+          </Form.Field>
+        </Form.Group>
 
 
-          <Message error header="Oops!" content={this.state.errorMessage} />
-          <Button color='green' loading={this.state.loading}>
-            Create Campaing!
-          </Button>
-        </Form>
+        <Message error header="Oops!" content={this.state.errorMessage} />
+        <Button color='green' loading={this.state.loading}>
+          Create Campaing!
+        </Button>
+      </Form>
     )
   }
 }
