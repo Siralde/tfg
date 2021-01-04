@@ -61,7 +61,7 @@ class HomePage extends Component {
         <h1>Nombre de la Empresa</h1>
         <h2>Wallet Address</h2>
         <h3>Input con Tokens a Recibir</h3>
-        <h3>Input con Tokens a Enviar</h3>
+        <h3>Input con Ether a Enviar</h3>
         <h3>Boton de Imprimir que llama a Metamask</h3>
         <h3>Politica y Disclaimer</h3>
       </div>
