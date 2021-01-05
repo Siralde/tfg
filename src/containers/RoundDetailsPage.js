@@ -39,7 +39,7 @@ class RoundDetailsPage extends Component {
 
   renderMembers = (names, linkedins) => {
     
-    console.log(names, linkedins);
+    console.log(names, linkedins); //error aqui
 
     if(names === undefined || linkedins === undefined)
     {
@@ -76,7 +76,7 @@ class RoundDetailsPage extends Component {
   render() {
 
     const {companyName, email, url, direction, companyDescription, youtube, membersNames, membersLinkedin, bussinesModel, roundPurpose } = this.state.details;
-
+//TypeError: Cannot destructure property 'companyName' of 'this.state.details' as it is null. error aqui
     return (
 
       <Segment style={{ padding: '0em' }} vertical>

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import {questions} from '../components/questions';
 import { Grid, Form, Button, Icon, Message } from 'semantic-ui-react';
-import { API, graphqlOperation } from 'aws-amplify'
-import { createRoundDetails as CreateRoundDetails } from '../graphql/mutations'
-
+import { withRouter } from 'react-router-dom';
 
 class CreateRoundPage extends Component {
 
@@ -106,10 +104,15 @@ class CreateRoundPage extends Component {
 
     try 
     {
-      await API.graphql(graphqlOperation(CreateRoundDetails, { input: newRound }))
-      console.log('item created!')
-    } catch (err) {
-      console.log('error creating talk...', err)
+      this.props.history.push
+      ({
+          pathname: '/createRound', 
+          newRound: newRound
+      })
+    } 
+    catch (err) 
+    {
+      console.log('Error in Creating the Campaing Page', err)
     }
   }
 
@@ -353,4 +356,4 @@ class CreateRoundPage extends Component {
   }
 }
   
-export default CreateRoundPage;
+export default withRouter(CreateRoundPage);

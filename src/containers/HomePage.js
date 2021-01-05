@@ -23,7 +23,7 @@ class HomePage extends Component {
     } 
     catch (err) 
     {
-      console.log('error fetching talks...', err)
+      console.log('error fetching campaigns...', err)
     }
   }
 
