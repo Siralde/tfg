@@ -21,8 +21,7 @@ import {
 const zeros = "0x000000000000000000000000";
 
 class InvestPage extends Component {
-
-
+  
   state = {
     etherToCollect: 0,
     tokenName: '' ,

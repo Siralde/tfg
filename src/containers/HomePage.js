@@ -13,8 +13,6 @@ class HomePage extends Component {
     };
     this.renderRounds = this.renderRounds.bind(this);
   }  
-
-  // execute the query in componentDidMount
   async componentDidMount() {
     try 
     {
@@ -28,7 +26,6 @@ class HomePage extends Component {
   }
 
   renderRounds() {
-    
     if(this.state.rounds === [])
     {
       return <div>Loading</div>
