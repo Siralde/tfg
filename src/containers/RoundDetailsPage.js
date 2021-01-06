@@ -26,6 +26,7 @@ class RoundDetailsPage extends Component {
       bussinesModel: '', 
       roundPurpose: '',
       id: '',
+      tokenValue: ''
     }
   }
 
@@ -126,7 +127,7 @@ class RoundDetailsPage extends Component {
   render()
   {
     let { weiRaise, goal, openingTime, closingTime } = this.state;
-    let {companyName, email, url, direction, companyDescription, youtube, membersNames, membersLinkedin, bussinesModel, roundPurpose, id } = this.state.details;
+    let { companyName, email, url, direction, companyDescription, youtube, membersNames, membersLinkedin, bussinesModel, roundPurpose, id, tokenValue } = this.state.details;
 
     return ( 
       <Segment>
@@ -267,7 +268,14 @@ class RoundDetailsPage extends Component {
           }
           color='green'
         >
-          <Link to={`/${id}/invest`}>
+          <Link to={{
+            pathname: `/${id}/invest`,
+            roundDetails: {
+              companyName,
+              tokenValue
+            } 
+          }}
+          >
             Invertir
           </Link>
         </Button>

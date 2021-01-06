@@ -18,6 +18,7 @@ class HomePage extends Component {
     {
       const roundsData = await API.graphql(graphqlOperation(listRoundDetails));
       this.setState({rounds : roundsData.data.listRoundDetailss.items});
+      console.log(roundsData);
     } 
     catch (err) 
     {

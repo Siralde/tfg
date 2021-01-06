@@ -16,6 +16,7 @@ export const getRoundDetails = /* GraphQL */ `
       membersLinkedin
       bussinesModel
       roundPurpose
+      tokenValue
       createdAt
       updatedAt
     }
@@ -41,6 +42,7 @@ export const listRoundDetailss = /* GraphQL */ `
         membersLinkedin
         bussinesModel
         roundPurpose
+        tokenValue
         createdAt
         updatedAt
       }

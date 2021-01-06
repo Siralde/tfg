@@ -26,8 +26,7 @@ class InvestPage extends Component {
     etherToCollect: 0,
     tokenName: '' ,
     tokenSymbol: '',
-    tokenSupply: '',
-    tokenValue: 0,
+    tokenSupply: 0,
     campaignOpeningTime: new Date(),
     campaignClosingTime: new Date(),
     loading: false,
@@ -57,12 +56,10 @@ class InvestPage extends Component {
   onSubmit = async event => {
     event.preventDefault();
 
-    // const campaign = Campaign(this.props.address);
     const { etherToCollect, 
             tokenName, 
             tokenSymbol, 
             tokenSupply, 
-            tokenValue, 
             campaignOpeningTime, 
             campaignClosingTime 
           } = this.state;
@@ -95,9 +92,9 @@ class InvestPage extends Component {
       let campaignAddress = campaignAddressRaw.replace(zeros, "0x");
 
       roundDetails.id = campaignAddress;
+      roundDetails.tokenValue = (this.state.etherToCollect/this.state.tokenSupply).toString();
       
-      console.log(roundDetails);
-
+      console.log("RoundDetail!",roundDetails);
       await API.graphql(graphqlOperation(CreateRoundDetails, { input: roundDetails }))
       console.log("Campaña creada!");
       this.setState({ campaignAddress: campaignAddress });
@@ -209,12 +206,10 @@ class InvestPage extends Component {
                   <Input labelPosition='right' type='text' placeholder='Amount'>
                     <Label basic>1 ETH equivale</Label>
                       <input
-                        name='tokenValue'
-                        onChange={this.onChange}
                         value={(this.state.etherToCollect/this.state.tokenSupply).toString()}
-                        placeholder=''
                         type="number"
                         readOnly
+                        placeholder="0"
                       />
                     <Label>TOKEN</Label>
                   </Input>

@@ -11,4 +11,5 @@ type RoundDetails @model {
   membersLinkedin: [String]!
   bussinesModel: String
   roundPurpose: String
+  tokenValue: String!
 }

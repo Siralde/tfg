@@ -19,6 +19,7 @@ export const createRoundDetails = /* GraphQL */ `
       membersLinkedin
       bussinesModel
       roundPurpose
+      tokenValue
       createdAt
       updatedAt
     }
@@ -42,6 +43,7 @@ export const updateRoundDetails = /* GraphQL */ `
       membersLinkedin
       bussinesModel
       roundPurpose
+      tokenValue
       createdAt
       updatedAt
     }
@@ -65,6 +67,7 @@ export const deleteRoundDetails = /* GraphQL */ `
       membersLinkedin
       bussinesModel
       roundPurpose
+      tokenValue
       createdAt
       updatedAt
     }

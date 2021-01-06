@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {questions} from '../components/questions';
-import { Grid, Form, Button, Icon, Message } from 'semantic-ui-react';
+import { Grid, Form, Button, Icon, Message, Segment } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 
 class CreateRoundPage extends Component {
@@ -262,83 +262,87 @@ class CreateRoundPage extends Component {
 
   render() {
     return (
+      <div>
+      <Segment>
+        <Grid>
+          <Grid.Row>
+            <Grid.Column textAlign="center">
+              <h1>Crea tu ronda de Financiacion</h1>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row columns='12'>
+            <Grid.Column textAlign="center" width='11'>
+              <h2>{this.state.question}</h2>
+            </Grid.Column>
+            <Grid.Column textAlign="center" width='1'>
+              <h2>{this.state.questionNumber}/{questions.length}</h2>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column textAlign="center">
+              <Form>
+                {this.renderSwitch(this.state.questionNumber)}
+              </Form>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column textAlign="center">
+              <Button 
+                color='red'
+                onClick={this.previousQuestion}
+                icon 
+                labelPosition='left'
+              >
+                <Icon 
+                  name='left arrow' 
+                />
+                Atras
+              </Button>
+            
+              {
+                this.state.questionNumber === (questions.length - 1)
+                ?<Button 
+                    color='blue'
+                    onClick={this.uploadNewCompany}
+                    icon 
+                    labelPosition='right'
+                    basic 
+                    
+                  >
+                    Terminar
+                    <Icon name='checkmark' />
+                  </Button>
+                :(this.state.answer === '' ?
+                    <Button 
+                      color='green'
+                      onClick={this.nextQuestion}
+                      icon 
+                      labelPosition='right'
+                      disabled
+                    >
+                      Siguiente
+                      <Icon name='right arrow' />
+                    </Button>
+                  :
+                    <Button 
+                      color='green'
+                      onClick={this.nextQuestion}
+                      icon 
+                      labelPosition='right'
+                    >
+                      Siguiente
+                      <Icon name='right arrow' />
+                    </Button>
+                  )
+                }
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Segment>
       <Grid>
-        <Grid.Row>
-          <Grid.Column textAlign="center">
-            <h1>Crea tu ronda de Financiacion</h1>
-          </Grid.Column>
-        </Grid.Row>
-
-        <Grid.Row columns='12'>
-          <Grid.Column textAlign="center" width='11'>
-            <h2>{this.state.question}</h2>
-          </Grid.Column>
-          <Grid.Column textAlign="center" width='1'>
-            <h2>{this.state.questionNumber}/{questions.length}</h2>
-          </Grid.Column>
-        </Grid.Row>
-
-        <Grid.Row>
-          <Grid.Column textAlign="center">
-            <Form>
-              {this.renderSwitch(this.state.questionNumber)}
-            </Form>
-          </Grid.Column>
-        </Grid.Row>
-
-        <Grid.Row>
-          <Grid.Column textAlign="center">
-            <Button 
-              color='red'
-              onClick={this.previousQuestion}
-              icon 
-              labelPosition='left'
-            >
-              <Icon 
-                name='left arrow' 
-              />
-              Atras
-            </Button>
-          
-            {
-              this.state.questionNumber === (questions.length - 1)
-              ?<Button 
-                  color='blue'
-                  onClick={this.uploadNewCompany}
-                  icon 
-                  labelPosition='right'
-                  basic 
-                  
-                >
-                  Terminar
-                  <Icon name='checkmark' />
-                </Button>
-              :(this.state.answer === '' ?
-                  <Button 
-                    color='green'
-                    onClick={this.nextQuestion}
-                    icon 
-                    labelPosition='right'
-                    disabled
-                  >
-                    Siguiente
-                    <Icon name='right arrow' />
-                  </Button>
-                :
-                  <Button 
-                    color='green'
-                    onClick={this.nextQuestion}
-                    icon 
-                    labelPosition='right'
-                  >
-                    Siguiente
-                    <Icon name='right arrow' />
-                  </Button>
-                )
-              }
-          </Grid.Column>
-        </Grid.Row>
-
         <Grid.Row>
           <Grid.Column>
             <Message>
@@ -352,6 +356,7 @@ class CreateRoundPage extends Component {
           </Grid.Column>
         </Grid.Row>
       </Grid>
+      </div>
     )
   }
 }
