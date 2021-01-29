@@ -56,6 +56,8 @@ class InvestPage extends Component {
   onSubmit = async event => {
     event.preventDefault();
 
+    let complete = true;
+
     const { etherToCollect, 
             tokenName, 
             tokenSymbol, 
@@ -74,7 +76,11 @@ class InvestPage extends Component {
     
       const campaignFactory = CampaignFactory(
         // '0x55Cb7280531F02E398F603BbCc9430734b4B88dA',
-        '0x43b8cE6c399483F4203F38Ecfd49Bd59F3A04acb', 
+        // '0x43b8cE6c399483F4203F38Ecfd49Bd59F3A04acb',
+        // '0x9e0c3e879CC03e2E0b9F6aABB6EAb97BedE510c3', 
+        // '0x42Cf24C021538578e0a4370c19d5aD24A486F38c',
+        // '0x8b7868AB7867aa2771994B7c846FaCD3eA83F3dA',
+        '0xd47352a9d51600f17155850F878FFE62920fBb74',
         web3
       );
 
@@ -88,23 +94,34 @@ class InvestPage extends Component {
       ).send({ from: account.toString().toLowerCase() });
 
       let roundDetails = this.props.location.newRound;
-      let campaignAddressRaw = createCampaignResult.events[1].raw.data;
+      // let campaignAddressRaw = createCampaignResult.events[1].raw.data;
+      let campaignAddressRaw = createCampaignResult.events[2].raw.topics[2];
+      console.log("campaignAddressRaw!", campaignAddressRaw);
+
       let campaignAddress = campaignAddressRaw.replace(zeros, "0x");
+      console.log("campaignAddress!", campaignAddress);
+
+
+      // console.log("Campaña creada!", createCampaignResult);
 
       roundDetails.id = campaignAddress;
       roundDetails.tokenValue = (this.state.etherToCollect/this.state.tokenSupply).toString();
       
       console.log("RoundDetail!",roundDetails);
       await API.graphql(graphqlOperation(CreateRoundDetails, { input: roundDetails }))
-      console.log("Campaña creada!");
+      console.log("Campaña creada!", createCampaignResult);
       this.setState({ campaignAddress: campaignAddress });
     } 
     catch (err) 
     {
       this.setState({ errorMessage: err.message });
+      complete = false;
     }
 
-    this.setState({ loading: false, finish: true });
+    if(complete)
+      this.setState({ loading: false, finish: true });
+    else
+      this.setState({ loading: false, finish: false });
   }
 
   render() {
@@ -116,7 +133,7 @@ class InvestPage extends Component {
             <h1>La Campaña ha sido creada.</h1>
             <h1>La dirección es</h1>
             <h1>{this.state.campaignAddress}</h1>
-            <h1>Puedes consultar los detalles en siguiente
+            <h1>Puedes consultar los detalles en siguiente 
               <Link to={`/roundDetails/${this.state.campaignAddress}`}>
                 enlace                   
               </Link>
@@ -189,8 +206,9 @@ class InvestPage extends Component {
 
                 <Form.Field>
                   <Input labelPosition='right' type='text' placeholder='Amount'>
-                    <Label basic>Indica la cantidad de TOKEN que deseas generar</Label>
+                    <Label basic>1 ETH equivale</Label>
                       <input
+                        
                         name='tokenSupply'
                         onChange={this.onChange}
                         value={this.state.tokenSupply}
@@ -198,11 +216,11 @@ class InvestPage extends Component {
                         type="number"
                         min="0"
                       />
-                    <Label></Label>
+                    <Label>TOKEN</Label>
                   </Input>
                 </Form.Field>
 
-                <Form.Field>
+                {/* <Form.Field>
                   <Input labelPosition='right' type='text' placeholder='Amount'>
                     <Label basic>1 ETH equivale</Label>
                       <input
@@ -213,7 +231,7 @@ class InvestPage extends Component {
                       />
                     <Label>TOKEN</Label>
                   </Input>
-                </Form.Field>
+                </Form.Field> */}
 
                 <Form.Group widths='equal'>
                   <Form.Field>
@@ -244,8 +262,6 @@ class InvestPage extends Component {
               )
           )
         }
-        
-        
       </div>
     )
   }

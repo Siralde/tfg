@@ -12,8 +12,8 @@ class RoundDetailsPage extends Component {
   state = {
     weiRaise: '',
     goal: '',
-    openingTime: '',
-    closingTime: '',
+    openingTime: new Date().getTime().toString(),
+    closingTime: new Date().getTime().toString(),
     details: {
       companyName: '', 
       email: '', 
@@ -29,8 +29,6 @@ class RoundDetailsPage extends Component {
       tokenValue: ''
     }
   }
-
-
 
   async componentDidMount() {
 
@@ -50,7 +48,7 @@ class RoundDetailsPage extends Component {
     try {
       const campaign = Campaign(campaignID, web3);
       const weiRaise = await campaign.methods.weiRaised().call();
-      const goal = await campaign.methods.goal().call();
+      const goal = await campaign.methods.cap().call();
       const openingTime = await campaign.methods.openingTime().call();
       const closingTime = await campaign.methods.closingTime().call();
 
@@ -124,10 +122,11 @@ class RoundDetailsPage extends Component {
     )
   }
 
+
   render()
   {
-    let { weiRaise, goal, openingTime, closingTime } = this.state;
     let { companyName, email, url, direction, companyDescription, youtube, membersNames, membersLinkedin, bussinesModel, roundPurpose, id, tokenValue } = this.state.details;
+    let { weiRaise, goal, openingTime, closingTime } = this.state;
 
     return ( 
       <Segment>
@@ -150,6 +149,7 @@ class RoundDetailsPage extends Component {
                 allowFullScreen
               >
               </iframe> */}
+              {youtube}
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -171,21 +171,22 @@ class RoundDetailsPage extends Component {
               </Header>
               <p style={{ fontSize: '1.33em' }}>{companyDescription}</p>
             </Grid.Column>
-            
-            
               
             <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
               <Header as='h3' style={{ fontSize: '2em' }}>
                 Detalles de la Ronda
               </Header>
-                <h2>Wei Raise: {weiRaise}</h2> 
-                <h2>Goal: {goal}</h2>
-                <h2>Opening Time: {openingTime}</h2>
-                <h2>Closing Time: {closingTime}</h2>
+                <h2>ETH Recaudado: {web3.utils.fromWei(weiRaise)}</h2> 
+                <h2>ETH Meta: {web3.utils.fromWei(goal)}</h2>
+                <h2>Fecha de Inicio: {new Date(parseInt(openingTime*1000)).toUTCString()}</h2>
+                <h2>{openingTime}</h2>
 
+                <h2>Fecha de Fin: {new Date(parseInt(closingTime*1000)).toUTCString()}</h2>
+                <h2>{closingTime}</h2>
+
+
+                {/* <h2>Closing Time: {dateCT.getDay()} de {months[dateCT.getMonth()]} de {dateCT.getFullYear()}</h2> */}
             </Grid.Column>
-              
-            
           </Grid.Row>
         </Grid>
         <Divider
@@ -269,12 +270,12 @@ class RoundDetailsPage extends Component {
           color='green'
         >
           <Link to={{
-            pathname: `/${id}/invest`,
-            roundDetails: {
-              companyName,
-              tokenValue
-            } 
-          }}
+              pathname: `/${id}/invest`,
+              roundDetails: {
+                companyName,
+                tokenValue
+              } 
+            }}
           >
             Invertir
           </Link>
