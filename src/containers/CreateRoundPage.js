@@ -75,11 +75,6 @@ class InvestPage extends Component {
       );
     
       const campaignFactory = CampaignFactory(
-        // '0x55Cb7280531F02E398F603BbCc9430734b4B88dA',
-        // '0x43b8cE6c399483F4203F38Ecfd49Bd59F3A04acb',
-        // '0x9e0c3e879CC03e2E0b9F6aABB6EAb97BedE510c3', 
-        // '0x42Cf24C021538578e0a4370c19d5aD24A486F38c',
-        // '0x8b7868AB7867aa2771994B7c846FaCD3eA83F3dA',
         '0xd47352a9d51600f17155850F878FFE62920fBb74',
         web3
       );
@@ -242,9 +237,12 @@ class InvestPage extends Component {
                       value={this.state.campaignOpeningTime}
                     />
                   </Form.Field>
-                  <Form.Field >
+                  <Form.Field>
                     <Label basic>Fecha de Cierre</Label> 
                     <DateTimePicker
+                      style={{
+                        height: '10px'}
+                      }
                       minDate={new Date()}
                       onChange={this.closingTimeHandler}
                       value={this.state.campaignClosingTime}

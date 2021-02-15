@@ -176,8 +176,8 @@ class RoundDetailsPage extends Component {
               <Header as='h3' style={{ fontSize: '2em' }}>
                 Detalles de la Ronda
               </Header>
-                <h2>ETH Recaudado: {web3.utils.fromWei(weiRaise)}</h2> 
-                <h2>ETH Meta: {web3.utils.fromWei(goal)}</h2>
+                {/* <h2>ETH Recaudado: {web3.utils.fromWei(weiRaise)}</h2> 
+                <h2>ETH Meta: {web3.utils.fromWei(goal)}</h2> */}
                 <h2>Fecha de Inicio: {new Date(parseInt(openingTime*1000)).toUTCString()}</h2>
                 <h2>{openingTime}</h2>
 

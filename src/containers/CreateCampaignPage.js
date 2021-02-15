@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {questions} from '../components/questions';
+import {questions} from '../constants/questions';
 import { Grid, Form, Button, Icon, Message, Segment } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 
@@ -82,7 +82,6 @@ class CreateRoundPage extends Component {
     {
       this.checkIfLinkedinsAreReady(this.state.linkedins);
     }
-
   }
 
   uploadNewCompany = async() => {
@@ -174,8 +173,8 @@ class CreateRoundPage extends Component {
     }
   }
 
-  renderSwitch = (param) => {
-    switch(param) {
+  renderSwitch = (questNumber) => {
+    switch(questNumber) {
       case 3:
       case 4:
         return (
@@ -276,7 +275,7 @@ class CreateRoundPage extends Component {
               <h2>{this.state.question}</h2>
             </Grid.Column>
             <Grid.Column textAlign="center" width='1'>
-              <h2>{this.state.questionNumber}/{questions.length}</h2>
+              <h2>{this.state.questionNumber}/{questions.length - 1}</h2>
             </Grid.Column>
           </Grid.Row>
 
