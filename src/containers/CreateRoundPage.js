@@ -88,7 +88,6 @@ class InvestPage extends Component {
         web3.utils.toWei(etherToCollect, 'ether')
       ).send({ from: account.toString().toLowerCase() });
 
-      let roundDetails = this.props.location.newRound;
       // let campaignAddressRaw = createCampaignResult.events[1].raw.data;
       let campaignAddressRaw = createCampaignResult.events[2].raw.topics[2];
       console.log("campaignAddressRaw!", campaignAddressRaw);
@@ -98,7 +97,7 @@ class InvestPage extends Component {
 
 
       // console.log("Campaña creada!", createCampaignResult);
-
+      let roundDetails = this.props.location.companyDetails;
       roundDetails.id = campaignAddress;
       roundDetails.tokenValue = (this.state.etherToCollect/this.state.tokenRatio).toString();
       

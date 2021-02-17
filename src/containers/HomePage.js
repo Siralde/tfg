@@ -6,13 +6,9 @@ import { Link } from 'react-router-dom';
 
 class HomePage extends Component {
 
-  constructor(props){
-    super(props);
-    this.state = {
-        rounds : []
-    };
-    this.renderRounds = this.renderRounds.bind(this);
-  }  
+  state = {
+      rounds : []
+  }; 
   
   async componentDidMount() {
     try 
@@ -27,7 +23,7 @@ class HomePage extends Component {
     }
   }
 
-  renderRounds() {
+  renderRounds = () => {
     if(this.state.rounds === [])
     {
       return <div>Loading</div>

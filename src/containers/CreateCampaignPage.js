@@ -15,6 +15,16 @@ class CreateRoundPage extends Component {
     linkedins: []
   };
 
+  /**
+   * @func nextQuestion
+   * 
+   * Handles when the user decides to answer next question
+   *  If the user has answered the question before it show what he has answered and sets the state
+   *  If the user has not answered before it is shown empty and sets the state
+   *  If the user has finish the question and it is time to enter the linkedin of the member
+   *    the methods for linkdins cases takes control of the form
+   *  
+   */
   nextQuestion = () => 
   {
     let nextQuestion = this.state.questionNumber;
@@ -79,7 +89,7 @@ class CreateRoundPage extends Component {
   createRound = () => {
     const {answers, team, linkedins} = this.state; 
 
-    const newRound = {
+    const companyDetails = {
       companyName: answers[0],
       email: answers[1],
       url: answers[2],
@@ -96,7 +106,7 @@ class CreateRoundPage extends Component {
     this.props.history.push
     ({
         pathname: '/createRound', 
-        newRound: newRound
+        companyDetails: companyDetails
     })
   }
 
