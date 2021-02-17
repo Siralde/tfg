@@ -1,65 +1,57 @@
 import React, { Component } from 'react';
-import {questions} from '../constants/questions';
-import { Grid, Form, Button, Icon, Message, Segment } from 'semantic-ui-react';
+import { questions } from '../constants/questions';
+import { Grid, Form, Button, Icon, Segment } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 
 class CreateRoundPage extends Component {
 
-  constructor(props){
-    super(props);
+  state = {
+    question : questions[0],
+    questionNumber: 0,
+    finishQuestion: false,
+    answer: '',
+    answers: [],
+    team: [],
+    linkedins: []
+  };
 
-    this.state = {
-        question : questions[0],
-        questionNumber: 0,
-        finishQuestion: false,
-        answer: '',
-        answers: [],
-        team: [],
-        linkedins: []
-    };
-
-    this.nextQuestion = this.nextQuestion.bind(this);
-    this.previousQuestion = this.previousQuestion.bind(this);
-    this.handleName = this.handleName.bind(this);
-  }  
-
-  nextQuestion()
+  nextQuestion = () => 
   {
-      let nextQuestion = this.state.questionNumber;
-      nextQuestion++;
-      let currentAnswer = this.state.answer;
-      let currentQuestion = this.state.questionNumber;
-      let newAnswers = this.state.answers;
-      newAnswers[currentQuestion] = currentAnswer;
-      
-      //If we haven't respond to the question yet, the textarea is shown empty
-      if(newAnswers[nextQuestion] === undefined || newAnswers[nextQuestion] === '')
-      {
-        this.setState({ 
-          question: questions[nextQuestion],
-          questionNumber: nextQuestion, 
-          finishQuestion: false,
-          answers: newAnswers,
-          answer: ''
-        });        
-      }
-      else // is shown whatever is was written before
-      {
-        this.setState({ 
-          question: questions[nextQuestion],
-          questionNumber: nextQuestion, 
-          finishQuestion: false,
-          answers: newAnswers,
-          answer: newAnswers[nextQuestion]
-        });
-      }
-      if(nextQuestion === 7)
-      {
-        this.initializeTeamsAndLinkedis(this.state.answers[6])
-      }
+    let nextQuestion = this.state.questionNumber;
+    nextQuestion++;
+    let currentAnswer = this.state.answer;
+    let currentQuestion = this.state.questionNumber;
+    let newAnswers = this.state.answers;
+    newAnswers[currentQuestion] = currentAnswer;
+    
+    //If we haven't respond to the question yet, the textarea is shown empty
+    if(newAnswers[nextQuestion] === undefined || newAnswers[nextQuestion] === '')
+    {
+      this.setState({ 
+        question: questions[nextQuestion],
+        questionNumber: nextQuestion, 
+        finishQuestion: false,
+        answers: newAnswers,
+        answer: ''
+      });        
+    }
+    else // is shown whatever is was written before
+    {
+      this.setState({ 
+        question: questions[nextQuestion],
+        questionNumber: nextQuestion, 
+        finishQuestion: false,
+        answers: newAnswers,
+        answer: newAnswers[nextQuestion]
+      });
+    }
+    if(nextQuestion === 7)
+    {
+      this.initializeTeamsAndLinkedis(this.state.answers[6])
+    }
   }
 
-  previousQuestion()
+  previousQuestion = () => 
   {
     let preQuestion = this.state.questionNumber;
     preQuestion--;
@@ -84,7 +76,7 @@ class CreateRoundPage extends Component {
     }
   }
 
-  uploadNewCompany = async() => {
+  createRound = () => {
     const {answers, team, linkedins} = this.state; 
 
     const newRound = {
@@ -100,23 +92,12 @@ class CreateRoundPage extends Component {
       bussinesModel: 'Alde',
       roundPurpose: 'Round'
     }
-
-    try 
-    {
-      this.props.history.push
-      ({
-          pathname: '/createRound', 
-          newRound: newRound
-      })
-    } 
-    catch (err) 
-    {
-      console.log('Error in Creating the Campaing Page', err)
-    }
-  }
-
-  changeAnswer = (formData) => {
-    this.setState({answer: formData.target.value})
+  
+    this.props.history.push
+    ({
+        pathname: '/createRound', 
+        newRound: newRound
+    })
   }
 
   fileChange = (event) => {
@@ -261,7 +242,6 @@ class CreateRoundPage extends Component {
 
   render() {
     return (
-      <div>
       <Segment>
         <Grid>
           <Grid.Row>
@@ -287,6 +267,7 @@ class CreateRoundPage extends Component {
             </Grid.Column>
           </Grid.Row>
 
+          {/* BACK BUTTON */}
           <Grid.Row>
             <Grid.Column textAlign="center">
               <Button 
@@ -301,11 +282,12 @@ class CreateRoundPage extends Component {
                 Atras
               </Button>
             
+            {/* FORWARD BUTTON */}
               {
                 this.state.questionNumber === (questions.length - 1)
                 ?<Button 
                     color='blue'
-                    onClick={this.uploadNewCompany}
+                    onClick={this.createRound}
                     icon 
                     labelPosition='right'
                     basic 
@@ -341,21 +323,6 @@ class CreateRoundPage extends Component {
           </Grid.Row>
         </Grid>
       </Segment>
-      <Grid>
-        <Grid.Row>
-          <Grid.Column>
-            <Message>
-              <Message.Header>
-                Politica y Privacidad
-              </Message.Header>
-              <p>
-                Todos los datos serán tratados de forma anónima
-              </p>
-            </Message>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-      </div>
     )
   }
 }
