@@ -54,7 +54,6 @@ class RoundDetailsPage extends Component {
 
       this.setState({ weiRaise, goal, openingTime, closingTime });
       console.log("Ethereum Data: " + weiRaise, goal, openingTime, closingTime);
-
     } 
     catch (err) 
     {
@@ -109,20 +108,7 @@ class RoundDetailsPage extends Component {
       return members;
     }
   }
-
-  renderEthereumDetails = () => {
-    return (
-      <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
-        <Header as='h3' style={{ fontSize: '2em' }}>
-          Detalles de la Ronda
-        </Header>
-        
-          Mucho Ether
-      </Grid.Column>
-    )
-  }
-
-
+  
   render()
   {
     let { companyName, email, url, direction, companyDescription, youtube, membersNames, membersLinkedin, bussinesModel, roundPurpose, id, tokenValue } = this.state.details;

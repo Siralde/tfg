@@ -1,4 +1,4 @@
-export let questions = [ 
+export const questions = [ 
     "Introduce el Nombre Comercial",
     "Introduce el Email de la empresa",
     "Introduce el dominio de la empresa",

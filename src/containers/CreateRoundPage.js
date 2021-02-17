@@ -26,7 +26,7 @@ class InvestPage extends Component {
     etherToCollect: 0,
     tokenName: '' ,
     tokenSymbol: '',
-    tokenSupply: 0,
+    tokenRatio: 0,
     campaignOpeningTime: new Date(),
     campaignClosingTime: new Date(),
     loading: false,
@@ -61,7 +61,7 @@ class InvestPage extends Component {
     const { etherToCollect, 
             tokenName, 
             tokenSymbol, 
-            tokenSupply, 
+            tokenRatio, 
             campaignOpeningTime, 
             campaignClosingTime 
           } = this.state;
@@ -80,7 +80,7 @@ class InvestPage extends Component {
       );
 
       const createCampaignResult = await campaignFactory.methods.createCampaign(
-        tokenSupply,
+        tokenRatio,
         tokenName,
         tokenSymbol,
         this.convertDateToSeconds(campaignOpeningTime),
@@ -100,7 +100,7 @@ class InvestPage extends Component {
       // console.log("Campaña creada!", createCampaignResult);
 
       roundDetails.id = campaignAddress;
-      roundDetails.tokenValue = (this.state.etherToCollect/this.state.tokenSupply).toString();
+      roundDetails.tokenValue = (this.state.etherToCollect/this.state.tokenRatio).toString();
       
       console.log("RoundDetail!",roundDetails);
       await API.graphql(graphqlOperation(CreateRoundDetails, { input: roundDetails }))
@@ -138,7 +138,6 @@ class InvestPage extends Component {
         : 
           ( this.state.loading
             ? (
-              // <Button fluid basic size='massive' loading={this.state.loading}/>
               <Segment style={{height: "500px"}}>
                 <Dimmer active inverted>
                   <Loader size='massive' inverted>Loading</Loader>
@@ -147,115 +146,101 @@ class InvestPage extends Component {
               )
             : (
               <Segment>
-              <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
-                
-                <Header as='h2' icon textAlign='center'>
-                  <Icon name='cny' circular />
-                  <Header.Content>Creacion de la Campaña</Header.Content>
-                </Header>
+                <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
+                  
+                  <Header as='h2' icon textAlign='center'>
+                    <Icon name='cny' circular />
+                    <Header.Content>Creacion de la Campaña</Header.Content>
+                  </Header>
 
-                <Form.Field>
-                  <Input labelPosition='right' type='text' placeholder='Amount'>
-                    <Label basic>¿Cuánto ETH se desea recaudar? </Label>
-                      <input
-                        name='etherToCollect'
-                        onChange={this.onChange}
-                        value={this.state.etherToCollect}
-                        placeholder=''
-                        type="number"
-                        min="0"
-                      />
-                    <Label><Icon name='ethereum'/></Label>
-                  </Input>
-                </Form.Field>
-
-                <Form.Field>
-                  <Input labelPosition='right' type='text' placeholder='Amount'>
-                    <Label basic>¿Qué nombre deseas darle a tu TOKEN? </Label>
-                      <input
-                        name='tokenName'
-                        onChange={this.onChange}
-                        value={this.state.tokenName}
-                        placeholder=''
-                        type="text"
-                        maxLength="10"
-                      />
-                    <Label><Icon name='cny'/></Label>
-                  </Input>
-                </Form.Field>
-
-                <Form.Field>
-                  <Input labelPosition='right' type='text' placeholder='Amount'>
-                    <Label basic>Indica el simbolo de  </Label>
-                      <input
-                        name='tokenSymbol'
-                        onChange={this.onChange}
-                        value={this.state.tokenSymbol}
-                        placeholder=''
-                        type='text'
-                        maxLength="3"
-                      />
-                    <Label><Icon name='cny'/></Label>
-                  </Input>
-                </Form.Field>
-
-                <Form.Field>
-                  <Input labelPosition='right' type='text' placeholder='Amount'>
-                    <Label basic>1 ETH equivale</Label>
-                      <input
-                        
-                        name='tokenSupply'
-                        onChange={this.onChange}
-                        value={this.state.tokenSupply}
-                        placeholder=''
-                        type="number"
-                        min="0"
-                      />
-                    <Label>TOKEN</Label>
-                  </Input>
-                </Form.Field>
-
-                {/* <Form.Field>
-                  <Input labelPosition='right' type='text' placeholder='Amount'>
-                    <Label basic>1 ETH equivale</Label>
-                      <input
-                        value={(this.state.etherToCollect/this.state.tokenSupply).toString()}
-                        type="number"
-                        readOnly
-                        placeholder="0"
-                      />
-                    <Label>TOKEN</Label>
-                  </Input>
-                </Form.Field> */}
-
-                <Form.Group widths='equal'>
                   <Form.Field>
-                    <Label basic>Fecha de Inicio</Label>
-                    <DateTimePicker
-                      minDate={new Date()}
-                      onChange={this.openingTimeHandler}
-                      value={this.state.campaignOpeningTime}
-                    />
+                    <Input labelPosition='right' type='text' placeholder='Amount'>
+                      <Label basic>¿Cuánto ETH se desea recaudar? </Label>
+                        <input
+                          name='etherToCollect'
+                          onChange={this.onChange}
+                          value={this.state.etherToCollect}
+                          placeholder=''
+                          type="number"
+                          min="0"
+                        />
+                      <Label><Icon name='ethereum'/></Label>
+                    </Input>
                   </Form.Field>
+
                   <Form.Field>
-                    <Label basic>Fecha de Cierre</Label> 
-                    <DateTimePicker
-                      style={{
-                        height: '10px'}
-                      }
-                      minDate={new Date()}
-                      onChange={this.closingTimeHandler}
-                      value={this.state.campaignClosingTime}
-                    />
+                    <Input labelPosition='right' type='text' placeholder='Amount'>
+                      <Label basic>¿Qué nombre deseas darle al TOKEN? </Label>
+                        <input
+                          name='tokenName'
+                          onChange={this.onChange}
+                          value={this.state.tokenName}
+                          placeholder=''
+                          type="text"
+                          maxLength="10"
+                        />
+                      <Label><Icon name='cny'/></Label>
+                    </Input>
                   </Form.Field>
-                </Form.Group>
+
+                  <Form.Field>
+                    <Input labelPosition='right' type='text' placeholder='Amount'>
+                      <Label basic>¿Qué acrónimo deseas darle al TOKEN? </Label>
+                        <input
+                          name='tokenSymbol'
+                          onChange={this.onChange}
+                          value={this.state.tokenSymbol}
+                          placeholder=''
+                          type='text'
+                          maxLength="3"
+                        />
+                      <Label><Icon name='cny'/></Label>
+                    </Input>
+                  </Form.Field>
+
+                  <Form.Field>
+                    <Input labelPosition='right' type='text' placeholder='Amount'>
+                      <Label basic>1 ETH equivale</Label>
+                        <input
+                          name='tokenRatio'
+                          onChange={this.onChange}
+                          value={this.state.tokenRatio}
+                          placeholder=''
+                          type="number"
+                          min="0"
+                        />
+                      <Label>TOKEN</Label>
+                    </Input>
+                  </Form.Field>
+
+                  <Form.Group widths='equal'>
+                    <Form.Field>
+                      <Label basic>Fecha de Inicio</Label>
+                      <DateTimePicker
+                        minDate={new Date()}
+                        onChange={this.openingTimeHandler}
+                        value={this.state.campaignOpeningTime}
+                      />
+                    </Form.Field>
+                    <Form.Field>
+                      <Label basic>Fecha de Cierre</Label> 
+                      <DateTimePicker
+                        style={{
+                          height: '10px'}
+                        }
+                        minDate={new Date()}
+                        onChange={this.closingTimeHandler}
+                        value={this.state.campaignClosingTime}
+                      />
+                    </Form.Field>
+                  </Form.Group>
 
 
-                <Message error header="Oops!" content={this.state.errorMessage} />
-                <Button color='green'>
-                  Create Campaing!
-                </Button>
-              </Form> 
+                  <Message error header="Oops!" content={this.state.errorMessage} />
+                  <Button color='green'>
+                    Create Campaing!
+                  </Button>
+                </Form> 
               </Segment>
               )
           )

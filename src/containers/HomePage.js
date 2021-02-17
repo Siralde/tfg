@@ -13,6 +13,7 @@ class HomePage extends Component {
     };
     this.renderRounds = this.renderRounds.bind(this);
   }  
+  
   async componentDidMount() {
     try 
     {

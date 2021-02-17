@@ -19,7 +19,7 @@ class InvestPage extends Component {
       { method: 'eth_requestAccounts' }
     );
   
-    let wei =  web3.utils.toWei(this.state.etherToSend, 'ether');
+    let wei = web3.utils.toWei(this.state.etherToSend, 'ether');
 
     const transactionParameters = {
       to: this.props.match.params.id, 
@@ -73,7 +73,7 @@ class InvestPage extends Component {
                   <Input labelPosition='right' type='text' placeholder='Amount'>
                     <Label basic>Token a recibir </Label>
                       <input
-                        name='tokenName'                       
+                        name='tokenRatio'                       
                         value={this.state.etherToSend / this.state.tokenValue}
                         type="text"
                         readOnly
