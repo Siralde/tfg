@@ -20,7 +20,7 @@ import {
 
 const zeros = "0x000000000000000000000000";
 
-class InvestPage extends Component {
+class CreateRoundPage extends Component {
   
   state = {
     etherToCollect: 0,
@@ -249,4 +249,4 @@ class InvestPage extends Component {
   }
 }
 
-export default InvestPage;
+export default CreateRoundPage;

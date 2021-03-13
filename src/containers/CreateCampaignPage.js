@@ -3,7 +3,7 @@ import { questions } from '../constants/questions';
 import { Grid, Form, Button, Icon, Segment } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 
-class CreateRoundPage extends Component {
+class CreateCampaignPage extends Component {
 
   state = {
     question : questions[0],
@@ -57,7 +57,7 @@ class CreateRoundPage extends Component {
     }
     if(nextQuestion === 7)
     {
-      this.initializeTeamsAndLinkedis(this.state.answers[6])
+      this.initializeTeamsAndLinkedins(this.state.answers[6])
     }
   }
 
@@ -116,7 +116,7 @@ class CreateRoundPage extends Component {
     this.setState({ answers: newAnswers, answer: event.target.files[0]});
   }
 
-  initializeTeamsAndLinkedis = (teamNumber) => {
+  initializeTeamsAndLinkedins = (teamNumber) => {
     let newTeam = [];
     for(let i = 0; i < teamNumber; i++)
     {
@@ -139,11 +139,11 @@ class CreateRoundPage extends Component {
     this.checkIfLinkedinsAreReady(newLinkedin);
   }
 
-  checkIfLinkedinsAreReady(ar) 
+  checkIfLinkedinsAreReady(_linkedins) 
   {
     let linkedinFull = true;
     
-    ar.forEach(element => {
+    _linkedins.forEach(element => {
       
       if(element === '' || element === undefined)
       {
@@ -337,4 +337,4 @@ class CreateRoundPage extends Component {
   }
 }
   
-export default withRouter(CreateRoundPage);
+export default withRouter(CreateCampaignPage);
