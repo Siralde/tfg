@@ -92,20 +92,6 @@ class InvestPage extends Component {
             </Grid>
           </Form>
         </Segment>
-        <Grid>
-          <Grid.Row>
-            <Grid.Column>
-              <Message>
-                <Message.Header>
-                  Politica y Privacidad
-                </Message.Header>
-                <p>
-                  Todos los datos serán tratados de forma anónima
-                </p>
-              </Message>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
       </div>
     )
   }
