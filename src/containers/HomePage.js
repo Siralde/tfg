@@ -46,7 +46,7 @@ class HomePage extends Component {
             )
         };
       });
-      return <Card.Group items={roundDetails}/>;
+      return <Card.Group items={roundDetails} centered={true}/>;
     }
   }
 

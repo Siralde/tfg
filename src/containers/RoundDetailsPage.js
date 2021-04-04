@@ -32,17 +32,6 @@ class RoundDetailsPage extends Component {
 
   async componentDidMount() {
 
-    //Linkedin Plugin
-    const script = document.createElement("script");
-    script.setAttribute('type','text/javascript');
-    script.setAttribute('src','https://platform.linkedin.com/badges/js/profile.js');
-    // script.setAttribute('async');
-    // script.setAttribute('defer')
-    document.head.appendChild(script);
-    //Linkedin Plugin
-
-
-
     const campaignID = this.props.match.params.id;
 
     try {
@@ -98,7 +87,7 @@ class RoundDetailsPage extends Component {
                 <a 
                   className="LI-simple-link" 
                   href='https://es.linkedin.com/in/aldemaro-gonzalez?trk=profile-badge'
-                >
+                > 
                   {name}
                 </a>
               </div>
@@ -107,8 +96,21 @@ class RoundDetailsPage extends Component {
       });
       return members;
     }
-  }
+  };
   
+  getStringFecha = (date) => {
+    let dat = new Date(parseInt(date));
+    let day = dat.getDay();
+    let month = dat.getMonth();
+    let year = dat.getFullYear();
+
+    let hour = dat.getHours();
+    let min = dat.getMinutes();
+
+    return ( (day+1) + '/' + month + '/' + year + '\n' + hour + ':' + min );
+
+  }
+
   render()
   {
     let { companyName, email, url, direction, companyDescription, youtube, membersNames, membersLinkedin, bussinesModel, roundPurpose, id, tokenValue } = this.state.details;
@@ -116,6 +118,7 @@ class RoundDetailsPage extends Component {
 
     return ( 
       <Segment>
+        <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
         <Grid>
           <Grid.Row>
             <Grid.Column textAlign="center">
@@ -125,17 +128,9 @@ class RoundDetailsPage extends Component {
         
           <Grid.Row>
             <Grid.Column textAlign="center">
-              <h1>Video de Youtube que me recarga la pagina y hace que los parametros de la url cambien</h1>
-              {/* <iframe 
-                title={companyName}
-                width="560" 
-                height="315" 
-                src={youtube} 
-                allow='autoplay; encrypted-media; picture-in-picture' 
-                allowFullScreen
-              >
-              </iframe> */}
-              {youtube}
+
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/-AoFMcOHlpY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -155,23 +150,17 @@ class RoundDetailsPage extends Component {
               <Header as='h3' style={{ fontSize: '2em' }}>
                 Descripción de la Idea
               </Header>
-              <p style={{ fontSize: '1.33em' }}>{companyDescription}</p>
+              <h4 style={{ fontSize: '1.33em' }}>{companyDescription}</h4>
             </Grid.Column>
               
             <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
               <Header as='h3' style={{ fontSize: '2em' }}>
                 Detalles de la Ronda
               </Header>
-                {/* <h2>ETH Recaudado: {web3.utils.fromWei(weiRaise)}</h2> 
-                <h2>ETH Meta: {web3.utils.fromWei(goal)}</h2> */}
-                <h2>Fecha de Inicio: {new Date(parseInt(openingTime*1000)).toUTCString()}</h2>
-                <h2>{openingTime}</h2>
-
-                <h2>Fecha de Fin: {new Date(parseInt(closingTime*1000)).toUTCString()}</h2>
-                <h2>{closingTime}</h2>
-
-
-                {/* <h2>Closing Time: {dateCT.getDay()} de {months[dateCT.getMonth()]} de {dateCT.getFullYear()}</h2> */}
+                <h4>ETH Recaudado: {web3.utils.fromWei(weiRaise)}</h4> 
+                <h4>ETH Meta: {web3.utils.fromWei(goal)}</h4>
+                <h4>Fecha de Inicio: {this.getStringFecha(openingTime*1000)}</h4>
+                <h4>Fecha de Fin: {this.getStringFecha(closingTime*1000)}</h4>
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -190,10 +179,10 @@ class RoundDetailsPage extends Component {
             <Grid.Column textAlign="center" width='4'>
               EMAIL: <h4>{email}</h4>
             </Grid.Column>
-            <Grid.Column textAlign="center" width='4'>
+            <Grid.Column textAlign="center" width='5'>
               URL: <h4>{url}</h4>
             </Grid.Column>
-            <Grid.Column textAlign="center" width='4'>
+            <Grid.Column textAlign="center" width='3'>
               Direccion: <h4>{direction}</h4>
             </Grid.Column>
           </Grid.Row>
@@ -214,16 +203,16 @@ class RoundDetailsPage extends Component {
             </Grid.Row>
           </Grid>
 
-        <Divider
+        {/* <Divider
           as='h1'
           className='header'
           horizontal
           style={{ margin: '3em 0em', textTransform: 'uppercase' }}
-        >
-          Detalles
-        </Divider>
+        > */}
+          {/* Detalles
+        </Divider> */}
 
-        <Grid celled='internally' columns='equal' stackable>
+        {/* <Grid celled='internally' columns='equal' stackable>
           <Grid.Row textAlign='center'>
             <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
               <Header as='h3' style={{ fontSize: '2em' }}>
@@ -238,7 +227,7 @@ class RoundDetailsPage extends Component {
               {roundPurpose}
             </Grid.Column>
           </Grid.Row>
-        </Grid>
+        </Grid> */}
 
         </Container>
 
@@ -255,7 +244,9 @@ class RoundDetailsPage extends Component {
           }
           color='green'
         >
-          <Link to={{
+          <Link 
+            style={{color: 'white'}}
+            to={{
               pathname: `/${id}/invest`,
               roundDetails: {
                 companyName,

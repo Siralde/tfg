@@ -128,8 +128,7 @@ class CreateRoundPage extends Component {
             <h1>La dirección es</h1>
             <h1>{this.state.campaignAddress}</h1>
             <h1>Puedes consultar los detalles en siguiente 
-              <Link to={`/roundDetails/${this.state.campaignAddress}`}>
-                enlace                   
+              <Link to={`/roundDetails/${this.state.campaignAddress}`}> enlace                   
               </Link>
             </h1>
           </Segment>
